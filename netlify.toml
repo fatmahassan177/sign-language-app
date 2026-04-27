@@ -1,0 +1,8 @@
+[build]
+  command = "ng build --configuration production"
+  publish = "dist/admin-dashboard/browser"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
