@@ -1,6 +1,6 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideRouter } from '@angular/router';
-
+import { CookieService } from 'ngx-cookie-service';
 import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { tokenInterceptor } from './core/interceptor/token-interceptor';
@@ -10,6 +10,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
       provideHttpClient(
       withInterceptors([tokenInterceptor])
-    )
+    ),
+      CookieService
   ]
 };

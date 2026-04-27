@@ -5,7 +5,7 @@ import { jwtDecode } from 'jwt-decode';
 import { BehaviorSubject, tap } from 'rxjs';
 import { IUser, ILogin, ILoginResponse } from '../Model/user.model';
 import { environment } from '../../Environment/environment';
-
+import { CookieService } from 'ngx-cookie-service';
 @Injectable({
   providedIn: 'root'
 })
@@ -14,13 +14,19 @@ export class AuthService {
   private TOKEN_KEY = 'token';
   private baseUrl = `${environment.apiUrl}/auth`;
 
-  private currentUserSubject =
-    new BehaviorSubject<IUser | null>(this.getUserFromToken());
 
-  currentUser$ = this.currentUserSubject.asObservable();
+private currentUserSubject = new BehaviorSubject<IUser | null>(null); 
 
-  constructor(private http: HttpClient, private router: Router) {}
+currentUser$ = this.currentUserSubject.asObservable();
 
+constructor(
+  private http: HttpClient, 
+  private router: Router, 
+  private cookieService: CookieService
+) {
+  
+  this.currentUserSubject.next(this.getUserFromToken());
+}
  
 login(data: ILogin) {
   return this.http.post<ILoginResponse>(
@@ -28,10 +34,18 @@ login(data: ILogin) {
     data
   ).pipe(
     tap(res => {
+      const token = res.accessToken;
 
-      const token = res.accessToken;   
-
-      localStorage.setItem(this.TOKEN_KEY, token);
+      
+      this.cookieService.set(
+        this.TOKEN_KEY, 
+        token, 
+        { 
+          expires: 1,        
+          secure: true,      
+          sameSite: 'Strict' 
+        }
+      );
 
       const user = this.getUserFromToken();
       this.currentUserSubject.next(user);
@@ -39,39 +53,32 @@ login(data: ILogin) {
   );
 }
 
-  
-  logout() {
-    localStorage.removeItem(this.TOKEN_KEY);
-    this.currentUserSubject.next(null);
-    this.router.navigate(['/login']);
-  }
+logout() {
+  this.cookieService.delete(this.TOKEN_KEY);
+  this.currentUserSubject.next(null);
+  this.router.navigate(['/login']);
+}
 
- 
-  getToken(): string | null {
-    return localStorage.getItem(this.TOKEN_KEY);
-  }
+getToken(): string | null {
+  return this.cookieService.get(this.TOKEN_KEY) || null;
+}
 
-  
-  getUserFromToken(): IUser | null {
+getUserFromToken(): IUser | null {
+  const token = this.getToken();
+  if (!token) return null;
 
-    const token = this.getToken();
-    if (!token) return null;
-
-    try {
-      const decoded = jwtDecode<IUser>(token);
-
-      if (decoded.exp * 1000 > Date.now()) {
-        return decoded;
-      }
-
-      return null;
-
-    } catch {
-      return null;
+  try {
+    const decoded = jwtDecode<IUser>(token);
+    if (decoded.exp * 1000 > Date.now()) {
+      return decoded;
     }
+    return null;
+  } catch {
+    return null;
   }
+}
 
-  isLoggedIn(): boolean {
-    return this.getUserFromToken() !== null;
-  }
+isLoggedIn(): boolean {
+  return this.getUserFromToken() !== null;
+}
 }
