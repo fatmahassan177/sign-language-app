@@ -1,0 +1,47 @@
+<div class="form-card">
+  <h2>📖 Add Word</h2>
+
+  <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+  <div *ngIf="errorMessage"   class="alert alert-danger">✕ {{ errorMessage }}</div>
+
+  <form [formGroup]="wordForm" (ngSubmit)="submit()">
+
+    <div class="form-group">
+      <label>Word</label>
+      <input type="text" formControlName="word" placeholder="Enter word">
+    </div>
+
+   <div class="form-group">
+  <label>Category</label>
+  <select formControlName="category">
+    <option value="">— Select Category —</option>
+    <option value="COMMON">COMMON</option>
+    <option value="FAMILY">FAMILY</option>
+    <option value="GREETINGS">GREETINGS</option>
+    <option value="NUMBERS">NUMBERS</option>
+    <option value="FOOD">FOOD</option>
+    <option value="EMOTIONS">EMOTIONS</option>
+  </select>
+</div>
+    <div class="form-group">
+      <label>Thumbnail</label>
+      <input type="file" accept="image/*" (change)="onThumbnailSelected($event)">
+      <div *ngIf="previewThumbnail" class="preview-box" style="margin-top:12px">
+        <img [src]="previewThumbnail" width="120">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Video</label>
+      <input type="file" accept="video/*" (change)="onVideoSelected($event)">
+      <div *ngIf="previewVideo" class="preview-box" style="margin-top:12px">
+        <video [src]="previewVideo" width="200" controls preload="none"></video>
+      </div>
+    </div>
+
+    <button type="submit" class="btn-primary-dark" [disabled]="wordForm.invalid">
+      + Add Word
+    </button>
+
+  </form>
+</div>

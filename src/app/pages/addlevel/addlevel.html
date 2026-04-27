@@ -1,0 +1,30 @@
+
+<div class="form-card">
+  <h2>🎯 Add Level</h2>
+
+  <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+  <div *ngIf="errorMessage"   class="alert alert-danger">✕ {{ errorMessage }}</div>
+
+  <form [formGroup]="levelForm" (ngSubmit)="submit()">
+
+    <div class="form-group">
+      <label>Level Name</label>
+      <input type="text" formControlName="name" placeholder="Enter level name">
+    </div>
+
+    <div class="form-group">
+      <label>Order</label>
+      <input type="number" formControlName="order" placeholder="1">
+    </div>
+
+    <div class="form-group">
+      <label>Image</label>
+      <input type="file" (change)="onFileSelected($event)">
+    </div>
+
+    <button type="submit" class="btn-primary-dark" [disabled]="levelForm.invalid">
+      + Add Level
+    </button>
+
+  </form>
+</div>

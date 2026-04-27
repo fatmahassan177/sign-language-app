@@ -1,0 +1,59 @@
+
+
+
+
+<div class="form-card">
+  <h2>🎬 Add Lesson</h2>
+
+  <div *ngIf="successMessage" class="alert alert-success">✓ {{ successMessage }}</div>
+  <div *ngIf="errorMessage"   class="alert alert-danger">✕ {{ errorMessage }}</div>
+
+  <form [formGroup]="lessonForm" (ngSubmit)="submit()">
+
+    <div class="form-group">
+      <label>Title</label>
+      <input type="text" formControlName="title" placeholder="Enter lesson title">
+    </div>
+
+    <div class="form-group">
+      <label>Description <span style="color:#4a5568">(optional)</span></label>
+      <textarea formControlName="description" rows="3" placeholder="Enter description"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Order</label>
+      <input type="number" formControlName="order" placeholder="1">
+    </div>
+
+    <div class="form-group">
+      <label>Course</label>
+      <select formControlName="courseId">
+        <option value="">— Select Course —</option>
+        <option *ngFor="let course of courses" [value]="course.id">
+          {{ course.name }}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Image <span style="color:#4a5568">(optional)</span></label>
+      <input type="file" accept="image/*" (change)="onImageSelected($event)">
+      <div *ngIf="previewImage" class="preview-box" style="margin-top:12px">
+        <img [src]="previewImage" width="120">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Video <span style="color:#4a5568">(optional)</span></label>
+      <input type="file" accept="video/*" (change)="onVideoSelected($event)">
+      <div *ngIf="previewVideo" class="preview-box" style="margin-top:12px">
+        <video [src]="previewVideo" width="200" controls></video>
+      </div>
+    </div>
+
+    <button type="submit" class="btn-primary-dark" [disabled]="lessonForm.invalid">
+      + Add Lesson
+    </button>
+
+  </form>
+</div>

@@ -1,0 +1,62 @@
+<div class="table-card">
+  <h2>📂 Categories</h2>
+  <table class="dark-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Image</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let cat of (categories$ | async)?.data; let i=index">
+        <td>{{ i+1 }}</td>
+        <td>{{ cat.name }}</td>
+        <td>
+          <img [src]="'https://itkalemsign.runasp.net'+cat.imageUrl" class="table-img">
+        </td>
+        <td>
+          <button class="btn-edit"   (click)="openEditModal(cat)">✏ Edit</button>
+          <button class="btn-delete" (click)="deleteCategory(cat.id!)">✕ Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" *ngIf="showModal" (click)="resetForm()">
+  <div class="modal-box" (click)="$event.stopPropagation()">
+
+    <div class="modal-box-header">
+      <h5>✏ Edit Category</h5>
+      <button class="modal-close" (click)="resetForm()">✕</button>
+    </div>
+
+    <div class="modal-box-body">
+      <form [formGroup]="categoryForm" (ngSubmit)="submitEdit()">
+
+        <div class="form-group">
+          <label>Name</label>
+          <input type="text" formControlName="name" placeholder="Enter category name">
+        </div>
+
+        <div class="form-group">
+          <label>Image</label>
+          <input type="file" (change)="onFileSelected($event)">
+          <div *ngIf="previewImage" class="preview-box" style="margin-top:12px">
+            <img [src]="previewImage" width="120">
+          </div>
+        </div>
+
+        <div>
+          <button type="submit" class="btn-success-dark">✓ Update</button>
+          <button type="button" class="btn-cancel-dark" (click)="resetForm()">Cancel</button>
+        </div>
+
+      </form>
+    </div>
+
+  </div>
+</div>

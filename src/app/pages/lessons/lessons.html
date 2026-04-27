@@ -1,0 +1,135 @@
+<!-- Table -->
+<div class="table-card">
+  <h2>🎬 Lessons</h2>
+  <table class="dark-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Title</th>
+        <th>Order</th>
+        <th>Image</th>
+        <th>Video</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let lesson of (lessons$ | async)?.data; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td>{{ lesson.title }}</td>
+        <td><span class="badge-order">{{ lesson.order }}</span></td>
+        <td>
+          <img *ngIf="lesson.imageUrl"
+            [src]="'https://itkalemsign.runasp.net' + lesson.imageUrl"
+            class="table-img">
+          <span *ngIf="!lesson.imageUrl" class="empty-cell">—</span>
+        </td>
+      
+          <td>
+  <ng-container *ngIf="lesson.videoUrl; else noVideo">
+    <button class="btn-watch" (click)="openVideoModal(lesson.videoUrl)">
+      ▶ Watch
+    </button>
+  </ng-container>
+  <ng-template #noVideo>
+    <span class="empty-cell">—</span>
+  </ng-template>
+</td>
+<td>
+          <button class="btn-edit"   (click)="openEditModal(lesson)">✏ Edit</button>
+          <button class="btn-delete" (click)="deleteLesson(lesson.id!)">✕ Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Modal Edit -->
+<div class="modal-overlay" *ngIf="showModal" (click)="resetForm()">
+  <div class="modal-box" (click)="$event.stopPropagation()">
+
+    <div class="modal-box-header">
+      <h5>✏ Edit Lesson</h5>
+      <button class="modal-close" (click)="resetForm()">✕</button>
+    </div>
+
+    <div class="modal-box-body">
+      <div *ngIf="errorMessage" class="alert alert-danger">✕ {{ errorMessage }}</div>
+
+      <form [formGroup]="lessonForm" (ngSubmit)="submit()">
+
+        <div class="form-group">
+          <label>Title</label>
+          <input type="text" formControlName="title">
+        </div>
+
+        <div class="form-group">
+          <label>Description</label>
+          <textarea formControlName="description" rows="3"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Order</label>
+          <input type="number" formControlName="order">
+        </div>
+
+        <div class="form-group">
+          <label>Course</label>
+          <select formControlName="courseId">
+            <option value="">— Select Course —</option>
+            <option *ngFor="let course of courses" [value]="course.id">
+              {{ course.name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Image <span style="color:#4a5568">(optional)</span></label>
+          <input type="file" accept="image/*" (change)="onImageSelected($event)">
+          <div *ngIf="previewImage" class="preview-box">
+            <img [src]="previewImage" width="120">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Video <span style="color:#4a5568">(optional)</span></label>
+          <input type="file" accept="video/*" (change)="onVideoSelected($event)">
+          <div *ngIf="previewVideo" class="preview-box">
+            <video [src]="previewVideo" width="200" controls></video>
+          </div>
+        </div>
+
+        <div>
+          <button type="submit" class="btn-success-dark" [disabled]="lessonForm.invalid">
+            ✓ Update
+          </button>
+          <button type="button" class="btn-cancel-dark" (click)="resetForm()">
+            Cancel
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Video Modal -->
+<div class="modal-overlay" *ngIf="showVideoModal" (click)="closeVideoModal()">
+  <div class="video-modal-box" (click)="$event.stopPropagation()">
+
+    <div class="modal-box-header">
+      <h5>▶ Watch Video</h5>
+      <button class="modal-close" (click)="closeVideoModal()">✕</button>
+    </div>
+
+    <div class="video-modal-body">
+      <video
+        [src]="currentVideoUrl!"
+        controls
+        preload="none"
+        width="100%"
+        style="border-radius: 8px; max-height: 400px;">
+      </video>
+    </div>
+
+  </div>
+</div>

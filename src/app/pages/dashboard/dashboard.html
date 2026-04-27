@@ -1,0 +1,144 @@
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <span class="brand-icon">🤟</span>
+      <span class="brand-name">ITKALEM SIGN</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-group-label">Content</div>
+
+      <a (click)="setView('levels')"   class="nav-item" [class.active]="activeView==='levels'">
+        <span class="nav-icon">🎯</span> Levels
+      </a>
+      <a (click)="setView('categories')" class="nav-item" [class.active]="activeView==='categories'">
+        <span class="nav-icon">📂</span> Categories
+      </a>
+      <a (click)="setView('courses')"  class="nav-item" [class.active]="activeView==='courses'">
+        <span class="nav-icon">📚</span> Courses
+      </a>
+      <a (click)="setView('lessons')"  class="nav-item" [class.active]="activeView==='lessons'">
+        <span class="nav-icon">🎬</span> Lessons
+      </a>
+      <a (click)="setView('dictionary')" class="nav-item" [class.active]="activeView==='dictionary'">
+  <span class="nav-icon">📖</span> Dictionary
+</a>
+
+    </nav>
+    <div class="sidebar-footer">
+    <button class="logout-btn" (click)="logout()">
+    🚪 Logout
+    </button>
+  </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="main-wrapper">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <h2 class="page-title">Dashboard Overview</h2>
+      <div class="topbar-right">
+        <span class="admin-badge">Admin</span>
+        <!-- ✅ زرار الـ logout -->
+    
+        <button class="theme-toggle" (click)="toggleTheme()">
+      <span *ngIf="isDark">☀️ </span>
+      <span *ngIf="!isDark">🌙 </span>
+    </button>
+
+      </div>
+         
+    
+
+    </header>
+
+    <main class="main-content">
+
+      <!-- Quick Actions -->
+      <div class="quick-actions-section">
+        <h3 class="section-title">⚡ Quick Actions</h3>
+        <div class="quick-actions-grid">
+
+          <button
+            class="action-card"
+            [class.active]="activeView==='addlevel'"
+            (click)="setView('addlevel')">
+            <span class="action-icon">🎯</span>
+            <span>Add Level</span>
+          </button>
+
+          <button
+            class="action-card"
+            [class.active]="activeView==='addcategory'"
+            (click)="setView('addcategory')">
+            <span class="action-icon">📂</span>
+            <span>Add Category</span>
+          </button>
+
+          <button
+            class="action-card"
+            [class.active]="activeView==='addcourse'"
+            (click)="setView('addcourse')">
+            <span class="action-icon">📚</span>
+            <span>Add Course</span>
+          </button>
+
+          <button
+            class="action-card"
+            [class.active]="activeView==='addlesson'"
+            (click)="setView('addlesson')">
+            <span class="action-icon">🎬</span>
+            <span>Add Lesson</span>
+          </button>
+
+          <button class="action-card"
+  [class.active]="activeView==='adddictionary'"
+  (click)="setView('adddictionary')">
+  <span class="action-icon">📖</span>
+  <span>Add Word</span>
+</button>
+        </div>
+      </div>
+
+      <!-- Dynamic Content -->
+      <div class="dynamic-content" *ngIf="activeView">
+        <div class="content-card">
+
+          <div class="content-card-header">
+            <h3>
+              {{ activeView === 'levels'      ? '🎯 All Levels'      :
+               activeView === 'dictionary'      ? '📖 All Words'   :
+                 activeView === 'categories'  ? '📂 All Categories'  :
+                 activeView === 'courses'     ? '📚 All Courses'     :
+                 activeView === 'lessons'     ? '🎬 All Lessons'     :
+                 activeView === 'addlevel'    ? '🎯 Add Level'       :
+                 activeView === 'addcategory' ? '📂 Add Category'    :
+                 activeView === 'addcourse'   ? '📚 Add Course'      :
+                 activeView === 'addlesson'   ? '🎬 Add Lesson'      :
+                  activeView === 'adddictionary'      ? '📖 Add Word'   :
+                   '' }}
+            </h3>
+            <button class="close-btn" (click)="activeView = null">✕</button>
+          </div>
+
+          <div class="content-card-body">
+            <app-levels      *ngIf="activeView === 'levels'"></app-levels>
+            <app-categories  *ngIf="activeView === 'categories'"></app-categories>
+            <app-courses     *ngIf="activeView === 'courses'"></app-courses>
+            <app-lessons     *ngIf="activeView === 'lessons'"></app-lessons>
+             <app-dictionary    *ngIf="activeView === 'dictionary'"></app-dictionary>
+            <app-addlevel    *ngIf="activeView === 'addlevel'"></app-addlevel>
+            <app-addcategory *ngIf="activeView === 'addcategory'"></app-addcategory>
+            <app-addcourse   *ngIf="activeView === 'addcourse'"></app-addcourse>
+            <app-addlesson   *ngIf="activeView === 'addlesson'"></app-addlesson>
+        
+            <app-adddictionary *ngIf="activeView === 'adddictionary'"></app-adddictionary>
+          </div>
+
+        </div>
+      </div>
+
+    </main>
+  </div>

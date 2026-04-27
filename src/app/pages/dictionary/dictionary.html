@@ -1,0 +1,59 @@
+<div class="table-card">
+  <h2>📖 Dictionary</h2>
+  <table class="dark-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Word</th>
+        <th>Category</th>
+        <th>Thumbnail</th>
+        <th>Video</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let word of (dictionary$ | async)?.data; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td>{{ word.word }}</td>
+        <td><span class="badge-order">{{ word.category }}</span></td>
+        <td>
+          <img *ngIf="word.thumbnailUrl"
+            [src]="'https://itkalemsign.runasp.net' + word.thumbnailUrl"
+            class="table-img">
+          <span *ngIf="!word.thumbnailUrl" class="empty-cell">—</span>
+        </td>
+        <td>
+          <ng-container *ngIf="word.videoUrl; else noVideo">
+            <button class="btn-watch" (click)="openVideoModal(word.videoUrl!)">
+              ▶ Watch
+            </button>
+          </ng-container>
+          <ng-template #noVideo>
+            <span class="empty-cell">—</span>
+          </ng-template>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Video Modal -->
+<div class="modal-overlay" *ngIf="showVideoModal" (click)="closeVideoModal()">
+  <div class="video-modal-box" (click)="$event.stopPropagation()">
+
+    <div class="modal-box-header">
+      <h5>▶ Watch Video</h5>
+      <button class="modal-close" (click)="closeVideoModal()">✕</button>
+    </div>
+
+    <div class="video-modal-body">
+      <video
+        [src]="currentVideoUrl!"
+        controls
+        preload="none"
+        width="100%"
+        style="border-radius: 8px; max-height: 400px;">
+      </video>
+    </div>
+
+  </div>
+</div>

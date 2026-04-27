@@ -1,0 +1,49 @@
+<div class="form-card">
+  <h2>📚 Add Course</h2>
+
+  <div *ngIf="successMessage" class="alert alert-success">✓ {{ successMessage }}</div>
+  <div *ngIf="errorMessage"   class="alert alert-danger">✕ {{ errorMessage }}</div>
+
+  <form [formGroup]="courseForm" (ngSubmit)="submit()">
+
+    <div class="form-group">
+      <label>Course Name</label>
+      <input type="text" formControlName="name" placeholder="Enter course name">
+    </div>
+
+    <div class="form-group">
+      <label>Order</label>
+      <input type="number" formControlName="order" placeholder="1">
+    </div>
+
+    <div class="form-group">
+      <label>Level</label>
+      <select formControlName="levelId">
+        <option value="">— Select Level —</option>
+        <option *ngFor="let level of levels" [value]="level.id">
+          {{ level.name }}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Category</label>
+      <select formControlName="categoryId">
+        <option value="">— Select Category —</option>
+        <option *ngFor="let cat of categories" [value]="cat.id">
+          {{ cat.name }}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Image <span style="color:#4a5568">(optional)</span></label>
+      <input type="file" (change)="onFileSelected($event)">
+    </div>
+
+    <button type="submit" class="btn-primary-dark" [disabled]="courseForm.invalid">
+      + Add Course
+    </button>
+
+  </form>
+</div>

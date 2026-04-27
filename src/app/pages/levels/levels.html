@@ -1,0 +1,69 @@
+<div class="table-card">
+  <h2>🎯 Levels</h2>
+  <table class="dark-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Order</th>
+        <th>Image</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let level of (levels$ | async)?.data; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td>{{ level.name }}</td>
+        <td><span class="badge-order">{{ level.order }}</span></td>
+        <td>
+          <img [src]="'https://itkalemsign.runasp.net' + level.imageUrl" class="table-img">
+        </td>
+        <td>
+          <button class="btn-edit"   (click)="openEditModal(level)">✏ Edit</button>
+          <button class="btn-delete" (click)="deleteLevel(level.id!)">✕ Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Modal Edit -->
+<div class="modal-overlay" *ngIf="showModal" (click)="resetForm()">
+  <div class="modal-box" (click)="$event.stopPropagation()">
+
+    <div class="modal-box-header">
+      <h5>✏ Edit Level</h5>
+      <button class="modal-close" (click)="resetForm()">✕</button>
+    </div>
+
+    <div class="modal-box-body">
+      <form [formGroup]="levelForm" (ngSubmit)="submit()">
+
+        <div class="form-group">
+          <label>Name</label>
+          <input type="text" formControlName="name" placeholder="Enter level name">
+        </div>
+
+        <div class="form-group">
+          <label>Order</label>
+          <input type="number" formControlName="order">
+        </div>
+
+        <div class="form-group">
+          <label>Image</label>
+          <input type="file" (change)="onFileSelected($event)">
+          <div *ngIf="previewImage" class="preview-box" style="margin-top:12px">
+            <img [src]="previewImage" width="120">
+          </div>
+        </div>
+
+        <div>
+          <button type="submit" class="btn-success-dark">✓ Update</button>
+          <button type="button" class="btn-cancel-dark" (click)="resetForm()">Cancel</button>
+        </div>
+
+      </form>
+    </div>
+
+  </div>
+</div>
